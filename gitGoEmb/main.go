@@ -3,12 +3,17 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"strings"
 )
 
-//go:generate bash get_version.sh
 //go:embed version.txt
-var version string
+var b []byte
 
 func main() {
-	fmt.Println("build version: ", version)
+	s := string(b)
+	fmt.Println(s)
+	vars := strings.Split(s, "\n")
+	for i, s := range vars {
+		fmt.Println("build version:", i, " - ", s)
+	}
 }
