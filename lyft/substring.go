@@ -1,29 +1,47 @@
 package lyft
 
+import (
+	"sort"
+)
+
 //mibSubstring("abc","abc")
 
 func minSubstring(fetch, input string) string {
-	fMap := createMap(fetch)
-	iMap := createMapPosition(input)
+	fMap, fKeys := createMap(fetch)
+	iSet, iKeys := createSetPosition(input)
+
+	if len(fKeys) != len(iKeys) {
+		return ""
+	}
+	for i, _ := range fKeys {
+		if fKeys[i] != iKeys[i] {
+			return ""
+		}
+	}
 
 	bgnW := len(input) - 1
 	endW := 0
-	for lttr, qty := range fMap {
-		positions, ok := iMap[lttr]
+	for _, order := range iSet {
+		lttr := order.Key
+		qty, ok := fMap[lttr]
+		if !ok {
+			continue
+		}
+		positions := order.Positions
 		// the letters from the fetch string doesn't have
 		// the same number of iterations on the input string
 		lenPsts := len(positions)
-		if !ok || lenPsts < qty {
+		if lenPsts < qty {
 			return ""
 		}
 		//New End Position
-		nbgn := positions[lenPsts-1]
-		nEnd := positions[lenPsts-qty]
+		nbgn := positions[0]
+		nEnd := positions[lenPsts-1]
 
-		if nEnd < bgnW {
+		if nEnd <= bgnW {
 			bgnW = nEnd
 		}
-		if nbgn > endW {
+		if nbgn >= endW {
 			endW = nbgn
 		}
 	}
@@ -31,18 +49,63 @@ func minSubstring(fetch, input string) string {
 	return input[bgnW : endW+1]
 }
 
-func createMap(s string) map[string]int {
+func createMap(s string) (map[string]int, []string) {
 	rMap := make(map[string]int)
 	for i := 0; i < len(s); i++ {
-		rMap[s[i:i+1]] = rMap[s[i:i+1]] + 1
+		lttr := s[i : i+1]
+		rMap[lttr] = rMap[lttr] + 1
 	}
-	return rMap
+	var keys []string
+	for k := range rMap {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	return rMap, keys
 }
 
-func createMapPosition(s string) map[string][]int {
-	rMap := make(map[string][]int)
-	for i := 0; i < len(s); i++ {
-		rMap[s[i:i+1]] = append(rMap[s[i:i+1]], i)
+type eSet struct {
+	Key       string
+	Order     int
+	Positions []int
+}
+
+type sortByOrder []eSet
+
+func (a sortByOrder) Len() int           { return len(a) }
+func (a sortByOrder) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a sortByOrder) Less(i, j int) bool { return a[i].Order < a[j].Order }
+
+func createSetPosition(s string) ([]eSet, []string) {
+	rMap := make(map[string]eSet)
+
+	for i, o := 0, 1; i < len(s); i++ {
+		lttr := s[i : i+1]
+		set, ok := rMap[lttr]
+		if !ok {
+			rMap[lttr] = eSet{
+				Key:       lttr,
+				Order:     o,
+				Positions: []int{i},
+			}
+			o++
+		} else {
+			rMap[lttr] = eSet{
+				Key:       set.Key,
+				Order:     set.Order,
+				Positions: append(set.Positions, i),
+			}
+		}
 	}
-	return rMap
+
+	var rs []eSet
+	var keys []string
+	for k, v := range rMap {
+		rs = append(rs, v)
+		keys = append(keys, k)
+	}
+
+	sort.Sort(sortByOrder(rs))
+	sort.Strings(keys)
+	return rs, keys
 }

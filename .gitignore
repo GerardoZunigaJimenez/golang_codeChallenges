@@ -1,3 +1,7 @@
 /go.sum
 /vendor/
 /.idea/
+/.idea/dataSources.xml
+/.idea/golang_codeChallenges.iml
+/.idea/modules.xml
+/.idea/vcs.xml
