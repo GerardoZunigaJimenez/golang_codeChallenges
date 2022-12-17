@@ -36,13 +36,13 @@ func minSubstring(fetch, input string) string {
 		}
 		//New End Position
 		nbgn := positions[0]
-		nEnd := positions[lenPsts-1]
+		nEnd := positions[qty-1]
 
-		if nEnd <= bgnW {
-			bgnW = nEnd
+		if nbgn < bgnW {
+			bgnW = nbgn
 		}
-		if nbgn >= endW {
-			endW = nbgn
+		if nEnd > endW {
+			endW = nEnd
 		}
 	}
 
