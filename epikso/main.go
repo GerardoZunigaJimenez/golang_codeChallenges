@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	ch := make(chan *int, 4)
+	ch := make(chan int)
 	finish := make(chan bool)
 	array := []int{1, 2, 3, 4}
 
@@ -15,7 +15,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 		for _, value := range array {
-			ch <- &value
+			ch <- value
 		}
 		finish <- true
 		return
@@ -26,7 +26,7 @@ func main() {
 		for {
 			select {
 			case value := <-ch:
-				fmt.Println(*value)
+				fmt.Println(value)
 			case <-finish:
 				fmt.Println("finish")
 				return

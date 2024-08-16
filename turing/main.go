@@ -21,6 +21,9 @@ func getCombinations(input []int) (output [][]int) {
 	return output
 }
 
+// TODO it is not working
 func main() {
+	//input {1, 2, 3}
+	//output {1, 2, 3}, {1, 3, 2}, {2, 3, 1},{2, 1, 3}, {3,1,2}, {3,2,1}
 	fmt.Println(getCombinations([]int{1, 2, 3}))
 }

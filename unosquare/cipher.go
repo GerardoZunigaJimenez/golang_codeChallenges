@@ -44,15 +44,15 @@ func isValidLetterRune(letter rune, rotation int) (rune, bool) {
 }
 
 func isValidLetterRune2(letter rune, rotation int) (rune, bool) {
-	original := "abcdefghijklmnopqrstuvwxyz"
-	oL := len(original)
-	for i, l := range original {
-		if letter == l {
+	base := "abcdefghijklmnopqrstuvwxyz"
+	l := len(base)
+	for i, v := range base {
+		if letter == v {
 			p := i + rotation
-			if p > oL {
-				p = (p - oL) - 1
+			if p > l {
+				p = (p - l) - 1
 			}
-			return rune(original[p]), true
+			return rune(base[p]), true
 		}
 	}
 
