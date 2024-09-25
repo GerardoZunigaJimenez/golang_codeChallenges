@@ -3,14 +3,13 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"regexp"
 	"text/template"
 )
 
 func main() {
 	var err error
 
-	pattern, err := regexp.Compile(`^(.*)-(.*)$`)
+	pattern, err := p.Compile(`^(.*)-(.*)$`)
 	if err != nil {
 		fmt.Println("🚫", err)
 		return
@@ -54,4 +53,4 @@ func main() {
 	}
 }
 
-var strs = []string{`727235402187-183`,`No SKU-HW55`}
+var strs = []string{`727235402187-183`, `No SKU-HW55`}
